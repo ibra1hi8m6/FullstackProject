@@ -1,0 +1,57 @@
+<div class="menu-box">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <div class="heading-title">
+          <h2>Special Menu</h2>
+          <p>Check out our delicious meals!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row inner-menu-box">
+      <!-- Categories Navigation -->
+      <div class="col-3">
+        <div class="nav flex-column nav-pills">
+          <a class="nav-link" [class.active]="selectedCategoryId === null" (click)="filterMeals(null)">
+            All
+          </a>
+          <a class="nav-link" *ngFor="let cat of categories"
+             [class.active]="selectedCategoryId === cat.categoryMealId"
+             (click)="filterMeals(cat.categoryMealId)">
+            {{ cat.nameEnglish }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Meals Grid -->
+      <div class="col-9">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 mb-4" *ngFor="let meal of filteredMeals">
+            <div class="gallery-single fix">
+              <img *ngIf="meal.imageFileBase64; else noImage"
+                   [src]="'data:image/jpeg;base64,' + meal.imageFileBase64"
+                   class="img-fluid" alt="{{meal.nameEnglish}}">
+              <ng-template #noImage>
+                <p>No image available</p>
+              </ng-template>
+
+              <div class="why-text mt-2">
+                <h4>{{ meal.nameEnglish }} ({{ meal.nameArabic }})</h4>
+                <p>Category: {{ getCategoryName(meal) }}</p>
+
+                <button class="btn btn-primary" [routerLink]="['/meal', meal.mealId]">
+            View Details
+          </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="filteredMeals.length === 0" class="text-center">
+          <p>No meals found.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

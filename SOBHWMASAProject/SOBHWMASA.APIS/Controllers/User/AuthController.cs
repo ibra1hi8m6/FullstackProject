@@ -1,0 +1,48 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SOBHWMASA.Infrastructure.ViewModel.Users;
+using SOBHWMASA.Service.Implementation.IService;
+
+namespace SOBHWMASA.APIS.Controllers.User
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IUserService _userService;
+        public AuthController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            var user = await _userService.RegisterAsync(model);
+            return Ok(new { user.Id, user.Email });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            var token = await _userService.LoginAsync(model);
+
+            // Set JWT in cookie
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+            return Ok(new { Token = token });
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _userService.LogoutAsync();
+            Response.Cookies.Delete("jwt");
+            return Ok("Logged out");
+        }
+    }
+}

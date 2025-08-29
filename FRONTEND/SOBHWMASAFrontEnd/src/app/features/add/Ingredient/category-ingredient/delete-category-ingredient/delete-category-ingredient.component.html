@@ -1,0 +1,25 @@
+<p>delete-category-ingredient works!</p>
+<div class="row">
+  <div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="contact-block">
+
+        <div class="row">
+          <h3>Delete Category Ingredient</h3>
+
+          <div class="form-group">
+            <label for="ingredientSelect">Select Category Ingredient</label>
+            <select class="form-control" [(ngModel)]="selectedId" name="ingredientSelect" required>
+              <option [ngValue]="null" disabled selected>-- Select a Category Ingredient --</option>
+              <option *ngFor="let item of categoryIngredients" [ngValue]="item.categoryIngredientId">
+                {{ item.nameEnglish }}
+              </option>
+            </select>
+          </div>
+
+          <div class="text-center mt-3">
+            <button class="btn btn-danger" (click)="deleteIngredient()">Delete</button>
+          </div>
+        </div>
+
+    </div>
+  </div>

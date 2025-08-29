@@ -1,0 +1,61 @@
+﻿
+using AutoMapper;
+using SOBHWMASA.Data;
+using SOBHWMASA.Domain.Entities.Products;
+using SOBHWMASA.Infrastructure.Mapping;
+using SOBHWMASA.Service.Implementation.IService;
+using SOBHWMASA.Service.Implementation.Service;
+
+namespace SOBHWMASA.APIs.ExtensionsServices
+{
+    public static class ServiceExtensions
+    {
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        {
+            // Register your services here
+
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+           
+
+            //Services
+
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IIngredient, IngredientService>();
+            services.AddScoped<ISizeService, SizeService>();
+            services.AddScoped<IMealService, MealService>(provider =>
+            {
+                var mealRepo = provider.GetRequiredService<IRepository<Meal>>();
+                var categoryMealRepo = provider.GetRequiredService<IRepository<CategoryMeal>>(); // If needed in MealService constructor
+                var mealSizeRepo = provider.GetRequiredService<IRepository<MealSize>>();
+                var mealIngredientRepo = provider.GetRequiredService<IRepository<MealIngredient>>();
+                var mapper = provider.GetRequiredService<IMapper>();
+
+                // Get the IWebHostEnvironment instance from the service provider
+                // builder.Environment is already of type IWebHostEnvironment in web projects
+                var webHostEnvironment = provider.GetRequiredService<IWebHostEnvironment>(); // <--- Get IWebHostEnvironment
+
+                // Pass the WebRootPath to the MealService constructor
+                return new MealService(
+                    mealRepo,
+                    categoryMealRepo, // Pass this if your MealService constructor needs it
+                    mealSizeRepo,
+                    mealIngredientRepo,
+                    mapper,
+                    webHostEnvironment.WebRootPath); // <--- Pass the string here
+            });
+
+            services.AddAutoMapper(config =>
+            {
+                // Add your profiles here
+                config.AddProfile<CartMappingProfile>();
+                config.AddProfile<IngredientMappingProfile>();
+                config.AddProfile<MealMappingProfile>();
+                config.AddProfile<SizeMappingProfile>();
+   
+                
+            });
+            return services;
+        }
+    }
+}

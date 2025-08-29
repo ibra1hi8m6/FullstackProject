@@ -1,0 +1,170 @@
+<p>add-meal works!</p>
+<p class="heading">Add New Meal</p>
+<div class="container">
+  <form [formGroup]="MealsForm" (ngSubmit)="onSubmit()">
+
+    <!-- Basic Meal Details -->
+    <div class="form-section">
+      <h3>Meal Details</h3>
+
+      <div class="form-group">
+        <label for="nameEnglish">Name (English)</label>
+        <input type="text" formControlName="nameEnglish" class="form-control" placeholder="Enter English Name">
+        <div *ngIf="MealsForm.get('nameEnglish')?.invalid && MealsForm.get('nameEnglish')?.touched" class="text-danger">
+          English Name is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nameArabic">Name (Arabic)</label>
+        <input type="text" formControlName="nameArabic" class="form-control" placeholder="Enter Arabic Name">
+        <div *ngIf="MealsForm.get('nameArabic')?.invalid && MealsForm.get('nameArabic')?.touched" class="text-danger">
+          Arabic Name is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mealImage">Meal Image</label>
+        <input type="file" id="mealImage" (change)="onFileSelected($event)" accept="image/*" class="form-control">
+        <div *ngIf="selectedImage && MealsForm.get('imageUrl')?.invalid" class="text-danger">
+          Image is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="categoryMealId">Meal Category</label>
+        <select formControlName="categoryMealId" class="form-control">
+          <option [ngValue]="''" disabled>Select Meal Category</option>
+          <option *ngFor="let category of categoryMeals" [value]="category.categoryMealId">
+            {{ category.nameEnglish }}
+          </option>
+        </select>
+        <div *ngIf="MealsForm.get('categoryMealId')?.invalid && MealsForm.get('categoryMealId')?.touched" class="text-danger">
+          Meal Category is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select formControlName="status" class="form-control">
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+        <div *ngIf="MealsForm.get('status')?.invalid && MealsForm.get('status')?.touched" class="text-danger">
+          Status is required.
+        </div>
+      </div>
+    </div>
+
+    <!-- Meal Sizes Section -->
+    <div class="form-section">
+      <h3>Meal Sizes</h3>
+
+      <!-- Add New Size to Meal -->
+      <div class="form-inline-group">
+        <div class="form-group flex-grow-1">
+          <label for="categorySizeSelect">Select Size Category</label>
+          <select id="categorySizeSelect" class="form-control" [(ngModel)]="selectedCategorySizeId"
+                  [ngModelOptions]="{standalone: true}" (change)="onCategorySizeSelect()">
+            <option [ngValue]="null" disabled>Select Category</option>
+            <option *ngFor="let catSize of categorySizes" [ngValue]="catSize.categorySizeId">
+              {{ catSize.nameEnglish }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group flex-grow-1">
+          <label for="sizeSelect">Select Size</label>
+          <select id="sizeSelect" class="form-control" [(ngModel)]="selectedSizeToAdd" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="null" disabled>Select Size</option>
+            <option *ngFor="let size of filteredSizes" [ngValue]="size.sizeId">
+              {{ size.nameEnglish }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group price-input">
+          <label for="sizePrice">Price</label>
+          <input type="number" id="sizePrice" class="form-control" [(ngModel)]="priceForSelectedSize"
+                 [ngModelOptions]="{standalone: true}" placeholder="Enter Price" min="0">
+        </div>
+
+        <button type="button" class="btn btn-add" (click)="addMealSize()">
+          + Add Size
+        </button>
+      </div>
+
+      <!-- List of Added Sizes -->
+      <div class="added-items-list" formArrayName="mealSizes">
+        <div *ngIf="mealSizes.controls.length === 0" class="no-items-message">
+          No sizes added yet.
+        </div>
+        <div *ngFor="let sizeGroup of mealSizes.controls; let i = index" [formGroupName]="i" class="added-item">
+          <span class="item-text">
+            {{ getSizeName(sizeGroup.get('sizeId')?.value) }} - Price: {{ sizeGroup.get('price')?.value | currency:'USD':'symbol':'1.2-2' }}
+          </span>
+          <button type="button" class="btn btn-remove" (click)="removeMealSize(i)">
+            &times;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meal Ingredients Section -->
+    <div class="form-section">
+      <h3>Meal Ingredients</h3>
+
+      <!-- Add New Ingredient to Meal -->
+      <div class="form-inline-group">
+        <div class="form-group flex-grow-1">
+          <label for="categoryIngredientSelect">Select Ingredient Category</label>
+          <select id="categoryIngredientSelect" class="form-control" [(ngModel)]="selectedCategoryIngredientId"
+                  [ngModelOptions]="{standalone: true}" (change)="onCategoryIngredientSelect()">
+            <option [ngValue]="null" disabled>Select Category</option>
+            <option *ngFor="let catIng of categoryIngredients" [ngValue]="catIng.categoryIngredientId">
+              {{ catIng.nameEnglish }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group flex-grow-1">
+          <label for="ingredientSelect">Select Ingredient</label>
+          <select id="ingredientSelect" class="form-control" [(ngModel)]="selectedIngredientToAdd" [ngModelOptions]="{standalone: true}">
+            <option [ngValue]="null" disabled>Select Ingredient</option>
+            <option *ngFor="let ingredient of filteredIngredients" [ngValue]="ingredient.ingredientId">
+              {{ ingredient.nameEnglish }}
+            </option>
+          </select>
+        </div>
+
+        <button type="button" class="btn btn-add" (click)="addMealIngredient()">
+          + Add Ingredient
+        </button>
+      </div>
+
+      <!-- List of Added Ingredients -->
+      <div class="added-items-list" formArrayName="mealIngredients">
+        <div *ngIf="mealIngredients.controls.length === 0" class="no-items-message">
+          No ingredients added yet.
+        </div>
+        <div *ngFor="let ingredientGroup of mealIngredients.controls; let i = index" [formGroupName]="i" class="added-item">
+          <span class="item-text">
+            {{ getIngredientName(ingredientGroup.get('ingredientId')?.value) }}
+          </span>
+          <button type="button" class="btn btn-remove" (click)="removeMealIngredient(i)">
+            &times;
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button for the entire Meal Form -->
+    <div class="submit-button text-center">
+      <button type="submit" class="btn btn-common" [disabled]="MealsForm.invalid || mealSizes.length === 0 || mealIngredients.length === 0">
+        Create Meal
+      </button>
+      <div class="clearfix"></div>
+    </div>
+  </form>
+</div>
+

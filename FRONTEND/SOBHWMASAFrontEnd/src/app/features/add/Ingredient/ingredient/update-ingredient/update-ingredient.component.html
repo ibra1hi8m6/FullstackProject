@@ -1,0 +1,52 @@
+
+
+<p class="heading">Update Ingredient</p>
+<div class="container">
+  <form [formGroup]="ingredientForm" (ngSubmit)="updateIngredient()">
+
+    <!-- Ingredient Dropdown -->
+    <div class="form-group">
+      <label for="ingredientId">Select Ingredient</label>
+      <select formControlName="ingredientId" id="ingredientId" class="form-control" (change)="onIngredientSelect()">
+        <option value="" disabled>Select an ingredient</option>
+        <option *ngFor="let ingredient of allIngredients" [value]="ingredient.categoryIngredientId">
+          {{ ingredient.nameEnglish }} - {{ ingredient.nameArabic }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Name English -->
+    <div class="form-group">
+      <label for="nameEnglish">Name (English)</label>
+      <input type="text" formControlName="nameEnglish" placeholder="Enter name in English" class="form-control">
+    </div>
+
+    <!-- Name Arabic -->
+    <div class="form-group">
+      <label for="nameArabic">Name (Arabic)</label>
+      <input type="text" formControlName="nameArabic" placeholder="Enter name in Arabic" class="form-control">
+    </div>
+
+    <!-- Status Dropdown -->
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select formControlName="status" id="status" class="form-control">
+        <option [ngValue]="true">Active</option>
+        <option [ngValue]="false">Inactive</option>
+      </select>
+    </div>
+
+    <!-- Category Ingredient Dropdown -->
+    <div class="form-group">
+      <label for="categoryIngredientId">Category Ingredient</label>
+      <select formControlName="categoryIngredientId" id="categoryIngredientId" class="form-control">
+        <option *ngFor="let category of categoryIngredients" [value]="category.categoryIngredientId">
+          {{ category.nameEnglish }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Update Ingredient</button>
+  </form>
+</div>

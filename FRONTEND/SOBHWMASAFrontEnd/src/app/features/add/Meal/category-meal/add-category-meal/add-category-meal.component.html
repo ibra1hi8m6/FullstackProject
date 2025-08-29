@@ -1,0 +1,44 @@
+<p>add-category-meal works!</p>
+<div class="row">
+  <div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="contact-block">
+      <form id="contactForm"  [formGroup]="CategoryMealForm" (ngSubmit)="onSubmit()" >
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Enter Category Meal</h3>
+            <div class="col-md-12">
+              <div class="form-group">
+                <input type="text" class="form-control" formControlName="nameEnglish"  name="name" placeholder="Category English Name" required data-error="Please enter your name">
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <input type="text" class="form-control"  name="name"formControlName="nameArabic" placeholder="Category Arabic Name" required data-error="Please enter your name">
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <select class="custom-select d-block form-control" id="person" required data-error="Please select Person" formControlName="status">
+                  <option [ngValue]="null" disabled >Status</option>
+                  <option [ngValue]="false">Inactive</option>
+                  <option [ngValue]="true">Active</option>
+
+                </select>
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="submit-button text-center">
+              <button class="btn btn-common" id="submit" type="submit">Submit</button>
+              <div id="msgSubmit" class="h3 text-center hidden"></div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>

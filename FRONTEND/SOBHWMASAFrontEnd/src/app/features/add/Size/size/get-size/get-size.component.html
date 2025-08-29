@@ -1,0 +1,24 @@
+<p>get-size works!</p>
+<div class="row">
+  <div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="contact-block">
+
+        <div class="row">
+          <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="contact-block">
+              <h3> Size</h3>
+              <ul>
+                <li *ngFor="let Size of Sizes">
+                  <p><strong>Category Size ID:</strong> {{ Size.categorySizeId }}</p>
+                  <p><strong>Name (English):</strong> {{ Size.nameEnglish }}</p>
+                  <p><strong>Name (Arabic):</strong> {{ Size.nameArabic }}</p>
+                  <p><strong>Status:</strong> {{ Size.status ? 'Active' : 'Inactive' }}</p>
+                  <hr />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </div>

@@ -1,0 +1,25 @@
+.custom-nav {
+  display: flex;
+  gap: 15px; /* Adds space between items */
+  list-style: none; /* Removes default bullets */
+  padding: 0;
+  justify-content: center; /* Centers the navbar */
+}
+
+.custom-nav .nav-link {
+  color: black !important; /* Makes text black */
+  font-weight: normal;
+  text-decoration: none;
+  padding: 10px 15px; /* Adds space inside items */
+  border-bottom: none; /* Removes Bootstrap's underline */
+}
+
+.custom-nav .nav-link:hover {
+  font-weight: bold;
+  text-decoration: underline;
+  color: black !important; /* Keeps text black on hover */
+}
+
+.custom-nav .nav-item {
+  border-bottom: none !important; /* Removes underline under items */
+}

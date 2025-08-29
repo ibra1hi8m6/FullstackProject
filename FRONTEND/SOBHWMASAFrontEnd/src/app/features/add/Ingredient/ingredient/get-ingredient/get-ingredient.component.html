@@ -1,0 +1,13 @@
+<p>get-ingredient works!</p>
+<div *ngIf="ingredients.length > 0; else noIngredients">
+  <ul>
+    <li *ngFor="let ingredient of ingredients">
+      ingredient {{ ingredient.ingredientId }}  :
+      <strong>{{ ingredient.nameEnglish }}</strong> - {{ ingredient.nameArabic }}
+    </li>
+  </ul>
+</div>
+
+<ng-template #noIngredients>
+  <p>No ingredients found.</p>
+</ng-template>

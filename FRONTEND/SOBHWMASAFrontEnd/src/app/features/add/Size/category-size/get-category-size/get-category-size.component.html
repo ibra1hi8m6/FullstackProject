@@ -1,0 +1,24 @@
+<p>get-category-size works!</p>
+<div class="row">
+  <div class="col-lg-12 col-sm-12 col-xs-12">
+    <div class="contact-block">
+
+        <div class="row">
+          <div class="col-lg-12 col-sm-12 col-xs-12">
+            <div class="contact-block">
+              <h3>Category Size</h3>
+              <ul>
+                <li *ngFor="let categorySize of categorySizes">
+                  <p><strong>Category Size ID:</strong> {{ categorySize.categorySizeId }}</p>
+                  <p><strong>Name (English):</strong> {{ categorySize.nameEnglish }}</p>
+                  <p><strong>Name (Arabic):</strong> {{ categorySize.nameArabic }}</p>
+                  <p><strong>Status:</strong> {{ categorySize.status ? 'Active' : 'Inactive' }}</p>
+                  <hr />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+    </div>
+  </div>

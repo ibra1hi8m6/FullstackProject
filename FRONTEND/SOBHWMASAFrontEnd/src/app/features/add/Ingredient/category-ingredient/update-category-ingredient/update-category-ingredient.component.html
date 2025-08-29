@@ -1,0 +1,58 @@
+<p class="heading">Update Category Ingredient</p>
+<div class="container">
+  <!-- Use [formGroup] to bind to the reactive form -->
+  <form [formGroup]="categoryIngredientForm" (ngSubmit)="updateCategoryIngredient()">
+
+    <!-- Category Ingredient Dropdown for Selection -->
+    <div class="form-group">
+      <label for="categoryIngredientId">Select Category Ingredient</label>
+      <select formControlName="categoryIngredientId" id="categoryIngredientId" class="form-control" (change)="onCategoryIngredientSelect()">
+        <option value="" disabled>Select a category ingredient</option>
+        <option *ngFor="let category of allCategoryIngredients" [value]="category.categoryIngredientId">
+          {{ category.nameEnglish }} - {{ category.nameArabic }}
+        </option>
+      </select>
+      <!-- Display validation error if no category is selected -->
+      <div *ngIf="categoryIngredientForm.get('categoryIngredientId')?.invalid && categoryIngredientForm.get('categoryIngredientId')?.touched" class="text-danger">
+        Category Ingredient is required.
+      </div>
+    </div>
+
+    <!-- Name English Input Field -->
+    <div class="form-group">
+      <label for="nameEnglish">Name (English)</label>
+      <input type="text" formControlName="nameEnglish" placeholder="Enter name in English" class="form-control">
+      <!-- Display validation error -->
+      <div *ngIf="categoryIngredientForm.get('nameEnglish')?.invalid && categoryIngredientForm.get('nameEnglish')?.touched" class="text-danger">
+        Name (English) is required.
+      </div>
+    </div>
+
+    <!-- Name Arabic Input Field -->
+    <div class="form-group">
+      <label for="nameArabic">Name (Arabic)</label>
+      <input type="text" formControlName="nameArabic" placeholder="Enter name in Arabic" class="form-control">
+      <!-- Display validation error -->
+      <div *ngIf="categoryIngredientForm.get('nameArabic')?.invalid && categoryIngredientForm.get('nameArabic')?.touched" class="text-danger">
+        Name (Arabic) is required.
+      </div>
+    </div>
+
+    <!-- Status Dropdown (Add this if CategoryIngredient also has a 'status' property) -->
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select formControlName="status" id="status" class="form-control">
+        <option [ngValue]="true">Active</option>
+        <option [ngValue]="false">Inactive</option>
+      </select>
+      <div *ngIf="categoryIngredientForm.get('status')?.invalid && categoryIngredientForm.get('status')?.touched" class="text-danger">
+        Status is required.
+      </div>
+    </div>
+    
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" [disabled]="!categoryIngredientForm.valid">Update Category Ingredient</button>
+  </form>
+</div>

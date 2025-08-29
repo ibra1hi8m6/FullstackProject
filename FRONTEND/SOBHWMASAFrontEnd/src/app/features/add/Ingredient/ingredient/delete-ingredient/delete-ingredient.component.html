@@ -1,0 +1,33 @@
+<p class="heading">Delete Ingredient</p>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12">
+      <div class="contact-block">
+
+        <div class="row">
+          <h3>Delete Ingredient</h3>
+
+          <!-- Dropdown for selecting an ingredient to delete -->
+          <div class="form-group">
+            <label for="ingredientSelect">Select Ingredient</label>
+            <!-- [(ngModel)] binds the selected value to 'selectedId' in the component -->
+            <select class="form-control" [(ngModel)]="selectedId" name="ingredientSelect" required>
+              <option [ngValue]="null" disabled selected>-- Select an Ingredient --</option>
+              <!-- Loop through allIngredients to populate dropdown options -->
+              <option *ngFor="let ingredient of allIngredients" [ngValue]="ingredient.ingredientId">
+                {{ ingredient.nameEnglish }} - {{ ingredient.nameArabic }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Delete Button -->
+          <div class="text-center mt-3">
+            <!-- Button is disabled if no ingredient is selected (selectedId is null) -->
+            <button class="btn btn-danger" (click)="deleteIngredient()" [disabled]="selectedId === null">Delete</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

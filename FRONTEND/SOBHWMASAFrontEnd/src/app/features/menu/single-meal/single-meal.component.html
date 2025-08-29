@@ -1,0 +1,46 @@
+<div *ngIf="meal">
+  <h2>{{ meal.nameEnglish }} ({{ meal.nameArabic }})</h2>
+  <img *ngIf="meal.imageFileBase64" [src]="'data:image/jpeg;base64,' + meal.imageFileBase64" alt="{{ meal.nameEnglish }}" style="max-width:300px;">
+
+  <p>Category: {{ getCategoryName(meal) }}</p>
+
+<div *ngIf="meal.mealSizes?.length > 0">
+  <h3>Select Size</h3>
+  <select [(ngModel)]="selectedSizeId" class="form-select">
+    <option [ngValue]="null">-- Choose a size --</option>
+    <option *ngFor="let size of meal.mealSizes" [ngValue]="size.sizeId">
+      {{ size.nameEnglish }} ({{ size.nameArabic }}) - {{ size.price | currency }}
+    </option>
+  </select>
+</div>
+
+<!-- Ingredients -->
+<div *ngIf="meal.mealIngredients?.length > 0">
+  <h3>Ingredients</h3>
+  <ul>
+    <li *ngFor="let ing of meal.mealIngredients">
+      {{ ing.nameEnglish }} ({{ ing.nameArabic }})
+    </li>
+  </ul>
+</div>
+
+  <div>
+    <label>Quantity:</label>
+    <input type="number" [(ngModel)]="quantity" min="1">
+  </div>
+
+  <button
+  class="btn btn-success"
+  (click)="addToCart()"
+  *ngIf="authService.isAuthenticated()"
+>
+  Add to Cart
+</button>
+
+<div *ngIf="!authService.isAuthenticated()" class="alert alert-warning mt-3">
+  Please <a routerLink="/login">log in</a> to add items to your cart.
+</div>
+
+<div *ngIf="!meal">
+  <p>Loading meal...</p>
+</div>
