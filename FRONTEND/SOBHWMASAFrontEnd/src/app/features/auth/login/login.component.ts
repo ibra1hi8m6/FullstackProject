@@ -14,11 +14,16 @@ export class LoginComponent {
   model: LoginModel = { email: '', password: '' };
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,) {}
 
-  login() {
+login() {
     this.authService.login(this.model).subscribe({
       next: res => {
+        // ✅ Save token into localStorage
+        if (res.token) {
+          localStorage.setItem('jwtToken', res.token);
+        }
+
         alert('Logged in successfully!');
         this.router.navigate(['/']); // redirect to home
       },

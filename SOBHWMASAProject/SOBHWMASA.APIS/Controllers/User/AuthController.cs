@@ -27,14 +27,9 @@ namespace SOBHWMASA.APIS.Controllers.User
         {
             var token = await _userService.LoginAsync(model);
 
-            // Set JWT in cookie
-            Response.Cookies.Append("jwt", token, new CookieOptions
-            {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict
-            });
+           
 
-            return Ok(new { Token = token });
+            return Ok(new { token = token });
         }
 
         [HttpPost("logout")]

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, tap } from 'rxjs';
@@ -37,36 +37,51 @@ export interface LoginModel {
 export class AuthService {
 
   private baseUrl = `${environment.apiurl}/Auth`; // your backend API
-
+  private tokenKey = 'jwtToken';
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
     register(model: RegisterModel): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, model);
   }
-
-  login(model: LoginModel): Observable<any> {
+ login(model: LoginModel): Observable<any> {
     return this.http.post<{ token: string }>(`${this.baseUrl}/login`, model).pipe(
       tap(res => {
         if (res && res.token) {
-          this.cookieService.set('jwt', res.token, 1, '/'); // 1 day expiry
+          // Save token in cookies
+          this.setToken(res.token);
         }
       })
     );
   }
+  //  logout(): Observable<any> {
+  //   return this.http.post(`${this.baseUrl}/logout`, {}).pipe(
+  //     tap(() => this.clearToken())
+  //   );
+  // }
+    logout(): void {
+    this.clearToken();
 
-   logout(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/logout`, {}).pipe(
-      tap(() => this.clearToken())
-    );
   }
-    clearToken() {
-    this.cookieService.delete('jwt');
-  }
- getToken() {
-    return this.cookieService.get('jwt');
+    clearToken(): void {
+    this.cookieService.delete(this.tokenKey, '/'); // delete token from cookie
   }
 
-  isAuthenticated(): boolean {
+   getToken(): string | null {
+    return localStorage.getItem('jwtToken'); // Or from CookieService if you prefer
+  }
+setToken(token: string): void {
+  this.cookieService.set('jwt', token, {
+    path: '/',
+    secure: true,      // required if using HTTPS
+    sameSite: 'None'   // important for cross-origin requests
+  });
+}
+ isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+
+     authHeaders(): HttpHeaders {
+    const token = this.getToken();
+    return token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
   }
 }

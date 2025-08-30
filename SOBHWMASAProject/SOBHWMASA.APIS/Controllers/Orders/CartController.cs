@@ -19,8 +19,8 @@ namespace SOBHWMASA.APIS.Controllers.Orders
             _cartService = cartService;
         }
 
-        [HttpPost]
-        [Authorize]
+        [HttpPost("create")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> CreateCart([FromBody] CartDto cartDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

@@ -24,20 +24,18 @@ export class CartService {
   private baseUrl = `${environment.apiurl}/Cart`;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
-createCart(cartDto: Cart): Observable<any> {
-  const token = this.authService.getToken();
+createCart(cart: any): Observable<any> {
 
-  let headers = new HttpHeaders();
-  if (token) {
-    headers = headers.set('Authorization', `Bearer ${token}`);
-  }
-
-  return this.http.post(`${this.baseUrl}`, cartDto, { headers });
+  return this.http.post(`${this.baseUrl}/create`, cart,
+  { withCredentials: true }
+);
 }
 
 
   getCartsByUser(userId: string): Observable<Cart[]> {
-    return this.http.get<Cart[]>(`${this.baseUrl}/user/${userId}`);
+    return this.http.get<Cart[]>(`${this.baseUrl}/user/${userId}`,{
+    headers: this.authService.authHeaders()
+  });
   }
 
   getCartById(cartId: number): Observable<Cart> {
