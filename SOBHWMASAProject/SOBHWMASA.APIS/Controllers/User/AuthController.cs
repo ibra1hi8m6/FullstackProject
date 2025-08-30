@@ -25,11 +25,20 @@ namespace SOBHWMASA.APIS.Controllers.User
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var token = await _userService.LoginAsync(model);
+            try
+            {
+                var trial = await _userService.LoginAsync(model);
+                if (trial.TryGetValue("error", out object? value) && (bool)value)
+                {
+                    throw new Exception((string)trial["message"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
 
-           
-
-            return Ok(new { token = token });
+            return Ok();
         }
 
         [HttpPost("logout")]

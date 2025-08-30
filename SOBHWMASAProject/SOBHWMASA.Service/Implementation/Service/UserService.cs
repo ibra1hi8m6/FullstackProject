@@ -45,38 +45,40 @@ namespace SOBHWMASA.Service.Implementation.Service
             return user;
         }
 
-        public async Task<string> LoginAsync(LoginModel model)
+        public async Task<Dictionary<string, object>> LoginAsync(LoginModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) throw new Exception("User not found");
+            if (user == null) return new Dictionary<string, object> { { "error", true }, { "message", "User not found" } };
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-            if (!result.Succeeded) throw new Exception("Invalid credentials");
+            if (!result.Succeeded) return new Dictionary<string, object> { { "error", true }, { "message", "Invalid credentials" } };
+
+            return new Dictionary<string, object> { { "error", false } };
 
             // Generate JWT
-            var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.SecondName}")
-        };
+            //     var claims = new List<Claim>
+            // {
+            //     new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+            //     new Claim(ClaimTypes.NameIdentifier, user.Id),
+            //     new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            //     new Claim(ClaimTypes.Name, $"{user.FirstName} {user.SecondName}")
+            // };
 
-            var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            //     var roles = await _userManager.GetRolesAsync(user);
+            //     claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            //     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            //     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                _config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddHours(3),
-                signingCredentials: creds
-            );
+            //     var token = new JwtSecurityToken(
+            //         _config["Jwt:Issuer"],
+            //         _config["Jwt:Audience"],
+            //         claims,
+            //         expires: DateTime.Now.AddHours(3),
+            //         signingCredentials: creds
+            //     );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            //     return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public async Task LogoutAsync()
