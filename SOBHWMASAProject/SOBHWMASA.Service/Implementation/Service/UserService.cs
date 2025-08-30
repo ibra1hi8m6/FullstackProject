@@ -50,7 +50,7 @@ namespace SOBHWMASA.Service.Implementation.Service
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null) return new Dictionary<string, object> { { "error", true }, { "message", "User not found" } };
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
             if (!result.Succeeded) return new Dictionary<string, object> { { "error", true }, { "message", "Invalid credentials" } };
 
             return new Dictionary<string, object> { { "error", false } };
