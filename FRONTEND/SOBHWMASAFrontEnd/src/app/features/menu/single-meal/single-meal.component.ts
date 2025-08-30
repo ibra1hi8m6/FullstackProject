@@ -56,11 +56,11 @@ loadCategories() {
   });
 }
  addToCart() {
-  // if (!this.authService.isAuthenticated()) {
-  //   alert('You must be logged in to add items to your cart.');
-  //   this.router.navigate(['/login']);
-  //   return;
-  // }
+  if (!this.authService.isAuthenticated()) {
+    alert('You must be logged in to add items to your cart.');
+    this.router.navigate(['/login']);
+    return;
+  }
 
   if (!this.selectedSizeId) {
     alert('Please select a size.');

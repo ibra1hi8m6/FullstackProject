@@ -25,20 +25,16 @@ namespace SOBHWMASA.APIS.Controllers.User
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            try
-            {
-                var trial = await _userService.LoginAsync(model);
-                if (trial.TryGetValue("error", out object? value) && (bool)value)
-                {
-                    throw new Exception((string)trial["message"]);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(ex.Message);
-            }
+            var token = await _userService.LoginAsync(model);
 
-            return Ok();
+            // Set JWT in cookie
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+            return Ok(new { Token = token });
         }
 
         [HttpPost("logout")]

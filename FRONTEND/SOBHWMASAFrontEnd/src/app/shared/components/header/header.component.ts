@@ -34,11 +34,22 @@ updateUserInfo() {
     return this.role === 'Admin';
   }
 
-logout() {
-  this.authService.logout(); // no subscribe needed
-  this.router.navigate(['/login']);
-  this.updateUserInfo(); // update header
-}
+   logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        // This will now trigger the clearToken method in the service
+        this.router.navigate(['/login']);
+        this.updateUserInfo(); // This updates the header to show "Sign In" and "Sign Up"
+      },
+      error: (err) => {
+        // Handle error, but still force logout on the frontend
+        console.error('Logout failed:', err);
+        this.authService.clearToken();
+        this.router.navigate(['/login']);
+        this.updateUserInfo();
+      }
+    });
+  }
 
 isUserLoggedIn(): boolean {
     return !!this.authService.getToken();

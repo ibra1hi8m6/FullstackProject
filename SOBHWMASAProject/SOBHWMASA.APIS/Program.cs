@@ -33,19 +33,31 @@ builder.Services.AddApplicationServices();
 builder.Services.AddOpenApi();
 
 
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-//    .AddEntityFrameworkStores<ApplicationDbContext>()
-//    .AddDefaultTokenProviders();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Password rules (optional)
-    options.Password.RequireDigit = false;
+    options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
-    options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Prevent redirect to /Account/Login
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        return Task.CompletedTask;
+    };
+});
 
 
 
@@ -57,16 +69,23 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
-
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SOBHWMASA API v1"));
+}
 var webRootPath = app.Environment.WebRootPath
     ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+
 
 var uploadsPath = Path.Combine(webRootPath, "uploads");
 Directory.CreateDirectory(uploadsPath);
 
-app.UseHttpsRedirection();
-app.UseCors("AllowAngularApp");
 
+app.UseCors("AllowAngularApp");
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -75,12 +94,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 app.UseAuthentication(); // Add this if using authentication
 app.UseAuthorization();
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SOBHWMASA API v1"));
-}
+
 app.MapControllers();
 
 app.Run();
