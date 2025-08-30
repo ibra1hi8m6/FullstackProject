@@ -11,7 +11,7 @@ namespace SOBHWMASA.Service.Implementation.IService
     public interface IUserService
     {
         Task<ApplicationUser> RegisterAsync(RegisterModel model);
-        Task<Dictionary<string, object>> LoginAsync(LoginModel model);
+        Task<string> LoginAsync(LoginModel model);
         Task LogoutAsync();
     }
 }
