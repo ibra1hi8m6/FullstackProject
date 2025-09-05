@@ -1,0 +1,94 @@
+<div class="mb-4">
+  <h2  class="fw-bold" style="color: rgb(214, 81, 6);">Sign up</h2>
+  <div>
+    Already have an account?
+    <a routerLink="/user/signin" class="text-decoration-none fw-medium  d-inlin-block"style="color: rgb(214, 81, 6);">Sign in</a>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="First Name" formControlName="firstName">
+    <div class="error-feedback" *ngIf="hasDisplayableError('firstName') && form.get('firstName')?.hasError('required')">
+  Please enter your First Name.
+</div>
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Second Name" formControlName="secondName">
+    <div class="error-feedback" *ngIf="hasDisplayableError('secondName') && form.get('secondName')?.hasError('required')">
+  Please enter your Second Name.
+</div>
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
+    <div class="error-feedback" *ngIf="hasDisplayableError('email')">
+      <div *ngIf="form.get('email')?.hasError('required')">Please enter your email address.</div>
+      <div *ngIf="form.get('email')?.hasError('email')">Please enter a valid email address.</div>
+    </div>
+  </div>
+<div class="mb-3">
+  <input class="form-control bg-body-secondary" placeholder="Phone Number" formControlName="phoneNumber">
+  <div class="error-feedback" *ngIf="hasDisplayableError('phoneNumber')">
+    <div *ngIf="form.get('phoneNumber')?.hasError('required')">Please enter your phone number.</div>
+    <div *ngIf="form.get('phoneNumber')?.hasError('pattern')">Please enter a valid phone number.</div>
+  </div>
+</div>
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Password" formControlName="password" type="password">
+    <div class="error-feedback" *ngIf="hasDisplayableError('password')">
+      <ng-container [ngSwitch]="form.get('password')?.errors | firstKeyTs">
+        <div *ngSwitchCase="'required'">Please enter your password.</div>
+        <div *ngSwitchCase="'minlength'">At least 6 characters required.</div>
+        <div *ngSwitchCase="'pattern'">One or more special character(s).</div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Confirm Password" formControlName="confirmPassword" type="password">
+    <div class="error-feedback" *ngIf="hasDisplayableError('confirmPassword') && form.get('confirmPassword')?.hasError('passwordMismatch')">
+      Passwords don't match.
+    </div>
+  </div>
+<div class="mb-3">
+      <label>Role</label>
+      <select class="form-select" formControlName="role">
+        <option value="Admin">Admin</option>
+        <option value="Manager">Manager</option>
+        <option value="Cashier">Cashier</option>
+      </select>
+    </div>
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Description" formControlName="description">
+    <div class="error-feedback" *ngIf="hasDisplayableError('description') && form.get('description')?.hasError('required')">
+  Please enter your description.
+</div>
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Area Name" formControlName="areaName">
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Street Name" formControlName="streetName">
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Building Number" formControlName="buildingNumber">
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Floor Number" formControlName="floorNumber">
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Flat Number" formControlName="flatNumber">
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success w-100 rounded-3" style="background-color: rgb(214, 81, 6); color: white;"
+    >Register</button>
+  </div>
+</form>

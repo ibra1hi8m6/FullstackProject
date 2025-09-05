@@ -1,0 +1,90 @@
+<div class="checkout-container">
+  <h2>🛒 Checkout</h2>
+
+  <div *ngIf="detailedCartItems.length === 0">
+    <p>Your cart is empty.</p>
+  </div>
+
+  <div *ngIf="detailedCartItems.length > 0">
+    <!-- Cart Items -->
+    <div *ngFor="let item of detailedCartItems" class="checkout-item">
+      <img [src]="'data:image/jpeg;base64,' + item.mealDetails.imageFileBase64" />
+      <div>
+        <h5>{{ item.mealDetails.nameEnglish }}</h5>
+        <p>Size: {{ item.sizeDetails.nameEnglish }}</p>
+        <p>Quantity: {{ item.quantity }}</p>
+        <p>Subtotal: ${{ item.subtotal.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <!-- Address Selection -->
+    <div class="address-section">
+      <h3>📍 Choose Address</h3>
+      <select [(ngModel)]="selectedAddressId">
+        <option [ngValue]="null">-- Select Address --</option>
+        <option *ngFor="let addr of userAddresses" [ngValue]="addr.id">
+  {{ addr.description }}
+  <span *ngIf="addr.areaName"> - {{ addr.areaName }}</span>
+  <span *ngIf="addr.streetName">, {{ addr.streetName }}</span>
+  <span *ngIf="addr.buildingNumber">, Bldg {{ addr.buildingNumber }}</span>
+  <span *ngIf="addr.floorNumber">, Floor {{ addr.floorNumber }}</span>
+  <span *ngIf="addr.flatNumber">, Flat {{ addr.flatNumber }}</span>
+</option>
+      </select>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="payment-section">
+      <h3>💳 Payment Method</h3>
+      <select [(ngModel)]="selectedPaymentMethod">
+        <option [ngValue]="1">Cash</option>
+        <option [ngValue]="2">Card</option>
+      </select>
+    </div>
+
+    <!-- Receive Type -->
+    <div class="receive-section">
+      <h3>🚚 Receive Type</h3>
+      <select [(ngModel)]="selectedReceiveType">
+        <option [ngValue]="1">Delivery</option>
+        <option [ngValue]="2">From Branch</option>
+      </select>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes-section">
+      <h3>📝 Order Notes</h3>
+      <textarea [(ngModel)]="orderDescription"
+                placeholder="Add special requests (e.g. no onions, extra spicy)"
+                rows="3"></textarea>
+    </div>
+
+    <!-- Coupon Section -->
+    <div class="coupon-section">
+      <h3>🎟 Apply Coupon</h3>
+      <ul>
+        <li *ngFor="let coupon of coupons">
+          {{ coupon.code }} - {{ coupon.discountPercentage }}%
+          <button (click)="applyCoupon(coupon.code)">Apply</button>
+        </li>
+      </ul>
+      <div *ngIf="appliedCoupon">
+        ✅ Applied: {{ appliedCoupon.code }} ({{ appliedCoupon.discountPercentage }}% Off)
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="total-section">
+      <h3>
+        Total:
+        <span *ngIf="appliedCoupon" class="old-price">
+          ${{ (totalPrice / (1 - appliedCoupon.discountPercentage/100)).toFixed(2) }}
+        </span>
+        <span class="new-price">${{ totalPrice.toFixed(2) }}</span>
+      </h3>
+    </div>
+
+    <!-- Confirm -->
+    <button class="btn btn-success" (click)="checkout()">Confirm Checkout</button>
+  </div>
+</div>

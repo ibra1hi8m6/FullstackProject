@@ -1,1 +1,33 @@
-<p>cashier-order works!</p>
+<div class="cashier-container">
+  <h2>📞 Cashier Order</h2>
+
+  <input
+    type="text"
+    placeholder="Enter customer phone number"
+    [(ngModel)]="phoneNumber"
+  />
+  <button (click)="findCustomer()">Find Customer</button>
+
+  <div *ngIf="customer">
+    <h3>Customer: {{ customer.firstName }} {{ customer.secondName }}</h3>
+
+    <div *ngIf="detailedCartItems.length > 0">
+      <h4>Cart Items:</h4>
+      <ul>
+        <li *ngFor="let item of detailedCartItems">
+          {{ item.mealDetails?.nameEnglish }} - Qty: {{ item.quantity }}
+          - Subtotal: {{ item.subtotal }}
+        </li>
+      </ul>
+
+      <h3>Total: {{ totalPrice }}</h3>
+      <button (click)="checkoutForCustomer()" class="btn btn-success">
+        Place Order
+      </button>
+    </div>
+
+    <div *ngIf="detailedCartItems.length === 0">
+      <p>No items in cart.</p>
+    </div>
+  </div>
+</div>

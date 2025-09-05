@@ -1,10 +1,18 @@
 ﻿
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SOBHWMASA.Data;
 using SOBHWMASA.Domain.Entities.Products;
-using SOBHWMASA.Infrastructure.Mapping;
-using SOBHWMASA.Service.Implementation.IService;
-using SOBHWMASA.Service.Implementation.Service;
+using SOBHWMASA.Domain.Entities.Users;
+using SOBHWMASA.Infrastructure.Mapping.OrderMapping;
+using SOBHWMASA.Infrastructure.Mapping.ProductMapping;
+using SOBHWMASA.Infrastructure.Mapping.UserMapping;
+using SOBHWMASA.Service.Implementation.IService.IOrder;
+using SOBHWMASA.Service.Implementation.IService.IProduct;
+using SOBHWMASA.Service.Implementation.IService.IUser;
+using SOBHWMASA.Service.Implementation.Service.Orders;
+using SOBHWMASA.Service.Implementation.Service.Product;
+using SOBHWMASA.Service.Implementation.Service.User;
 
 namespace SOBHWMASA.APIs.ExtensionsServices
 {
@@ -19,6 +27,9 @@ namespace SOBHWMASA.APIs.ExtensionsServices
 
             //Services
 
+            services.AddScoped<ICouponService, CouponService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IIngredient, IngredientService>();
@@ -52,6 +63,10 @@ namespace SOBHWMASA.APIs.ExtensionsServices
                 config.AddProfile<IngredientMappingProfile>();
                 config.AddProfile<MealMappingProfile>();
                 config.AddProfile<SizeMappingProfile>();
+                config.AddProfile<CartMappingProfile>();
+                config.AddProfile<CouponMappingProfile>();
+                config.AddProfile<OrderMappingProfile>();
+                config.AddProfile<AddressMappingProfile>();
    
                 
             });

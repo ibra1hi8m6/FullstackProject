@@ -9,7 +9,7 @@
   <select [(ngModel)]="selectedSizeId" class="form-select">
     <option [ngValue]="null">-- Choose a size --</option>
     <option *ngFor="let size of meal.mealSizes" [ngValue]="size.sizeId">
-      {{ size.nameEnglish }} ({{ size.nameArabic }}) - {{ size.price | currency }}
+      {{ size.nameEnglish }} ({{ size.nameArabic }}) - {{ size.price | currency:'AED':'symbol':'1.0-2' }}
     </option>
   </select>
 </div>
@@ -32,12 +32,12 @@
   <button
   class="btn btn-success"
   (click)="addToCart()"
-  *ngIf="authService.isAuthenticated()"
+  *ngIf="authService.isLoggedIn()"
 >
   Add to Cart
 </button>
 
-<div *ngIf="!authService.isAuthenticated()" class="alert alert-warning mt-3">
+<div *ngIf="!authService.isLoggedIn()" class="alert alert-warning mt-3">
   Please <a routerLink="/login">log in</a> to add items to your cart.
 </div>
 

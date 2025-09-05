@@ -16,6 +16,8 @@ namespace SOBHWMASA.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<CategoryMeal> CategoryMeals { get; set; }
         public DbSet<CategoryIngredient> CategoryIngredients { get; set; }
         public DbSet<CategorySize> CategorySizes { get; set; }
@@ -25,11 +27,15 @@ namespace SOBHWMASA.Data
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
-       
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderCounter> OrderCounters { get; set; }
+
+
 
         // Bridge entities
 
-        
+
         public DbSet<MealIngredient> MealIngredients { get; set; }
         public DbSet<MealSize> MealSizes { get; set; }
 

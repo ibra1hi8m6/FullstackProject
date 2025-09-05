@@ -1,14 +1,17 @@
 using AutoMapper;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.TeamFoundation.TestManagement.WebApi;
 using SOBHWMASA.APIs.ExtensionsServices;
 using SOBHWMASA.APIS.ExtensionsServices;
+using SOBHWMASA.APIS.WebApp;
 using SOBHWMASA.Data;
 using SOBHWMASA.Domain.Entities.Products;
 using SOBHWMASA.Domain.Entities.Users;
@@ -16,6 +19,8 @@ using SOBHWMASA.Infrastructure.Mapping;
 using SOBHWMASA.Service.Implementation.IService;
 using SOBHWMASA.Service.Implementation.Service;
 using System.IO;
+using System.Security.Claims;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<FormOptions>(options =>
@@ -35,66 +40,56 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
+    // optional password rules
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
-builder.Services.ConfigureApplicationCookie(options =>
+
+builder.Services.AddAuthentication(options =>
 {
-    // Prevent redirect to /Account/Login
-    options.Events.OnRedirectToLogin = context =>
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+})
+    .AddJwtBearer(o =>
     {
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        return Task.CompletedTask;
-    };
+        o.RequireHttpsMetadata = false;
+        o.SaveToken = false;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+            RoleClaimType = ClaimTypes.Role
 
-    options.Events.OnRedirectToAccessDenied = context =>
-    {
-        context.Response.StatusCode = StatusCodes.Status403Forbidden;
-        return Task.CompletedTask;
-    };
-});
-
-
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    await RoleSeeder.SeedRoles(roleManager);
-}
 
-// Configure the HTTP request pipeline.
+app.ConfigureWebAppAsync().GetAwaiter().GetResult();
+
+// Middleware order
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SOBHWMASA API v1"));
 }
-var webRootPath = app.Environment.WebRootPath
-    ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
-
-
-var uploadsPath = Path.Combine(webRootPath, "uploads");
-Directory.CreateDirectory(uploadsPath);
-
-
-app.UseCors("AllowAngularApp");
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(uploadsPath),
-    RequestPath = "/uploads"
-});
-app.UseAuthentication(); // Add this if using authentication
+app.UseCors("AllowAngularApp");
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

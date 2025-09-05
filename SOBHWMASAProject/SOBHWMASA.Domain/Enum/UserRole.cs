@@ -8,9 +8,10 @@ namespace SOBHWMASA.Domain.Enum
 {
     public enum UserRole
     {
-        Admin,
+        
         User,
+        Cashier,
         Manager,
-        Cashier
+        Admin
     }
 }

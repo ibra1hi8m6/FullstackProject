@@ -6,7 +6,9 @@ import { MealService } from '../../../shared/services/Meals/meal.service';
 import { SizeService } from '../../../shared/services/Sizes/size.service';
 import { Cart, CartItem, CartService } from '../../../shared/services/Cart/cart.service';
 import { CategoryMealService } from '../../../shared/services/Meals/category-meal.service';
-import { AuthService } from '../../../shared/services/Auths/auth.service';
+import { AuthService } from '../../../shared/services/Authentication/Auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-single-meal',
@@ -21,7 +23,7 @@ export class SingleMealComponent implements OnInit {
   quantity: number = 1;
   sizes: any[] = [];
 categories: any[] = [];
-
+private userId: string = '';
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -29,7 +31,8 @@ categories: any[] = [];
     private sizeService: SizeService,
     private categoryService: CategoryMealService,
     private cartService: CartService,
-    public authService: AuthService
+    public authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -55,47 +58,77 @@ loadCategories() {
     this.categories = res;
   });
 }
- addToCart() {
-  if (!this.authService.isAuthenticated()) {
-    alert('You must be logged in to add items to your cart.');
-    this.router.navigate(['/login']);
-    return;
-  }
-
-  if (!this.selectedSizeId) {
-    alert('Please select a size.');
-    return;
-  }
-
-  // Prepare the new cart item DTO
-  const newItem: CartItem = {
-    mealId: this.meal.mealId,
-    sizeId: this.selectedSizeId,
-    quantity: this.quantity,
-    status: true
-  };
-
-  const cartDto: Cart = {
-    status: true,
-    cartItems: [newItem]
-  };
-
-  // Just call the service — it attaches the token
-  this.cartService.createCart(cartDto).subscribe({
-    next: (res) => {
-      alert('Meal added to cart!');
-      const userChoice = window.confirm(
-        'Do you want to continue shopping? Click OK to continue or Cancel to go to the cart.'
-      );
-      if (!userChoice) {
-        this.router.navigate(['/cart']); // don’t pass userId, backend knows it
-      }
-    },
-    error: (err) => {
-      console.error('Failed to add item to cart', err);
-      alert('Failed to add meal to cart. Please try again.');
+  addToCart() {
+    if (!this.authService.isLoggedIn()) {
+      this.toastr.warning('You must be logged in to add items to your cart.', 'Warning', {
+        positionClass: 'toast-top-center',
+        timeOut: 3000,
+        progressBar: true,
+      });
+      this.router.navigate(['/ser/signin']);
+      return;
     }
-  });
-}
+
+    if (!this.selectedSizeId) {
+      this.toastr.warning('Please select a size.', 'Warning', {
+        positionClass: 'toast-top-center',
+        timeOut: 3000,
+        progressBar: true,
+      });
+      return;
+    }
+
+    const newItem: CartItem = {
+      mealId: this.meal.mealId,
+      sizeId: this.selectedSizeId,
+      quantity: this.quantity,
+      status: true
+    };
+
+    const cartDto: Cart = {
+      status: true,
+      cartItems: [newItem]
+    };
+
+    const claims = this.authService.getClaims();
+  const role = claims ? claims['role'] : null;
+
+  const targetUserId = role === 'Cashier'
+    ? localStorage.getItem('selectedUserId') || ''
+    : claims?.['UserID'] || '';
+
+  if (!targetUserId) return;
+
+  this.cartService.createCart(cartDto, targetUserId).subscribe({
+  next: () => {
+    Swal.fire({
+      toast: true,
+      position: 'top',
+      icon: 'success',
+      title: 'Meal added to cart!',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+    });
+
+    Swal.fire({
+      toast: true,
+      position: 'top',
+      icon: 'info',
+      title: 'Click here to view your cart.',
+      showConfirmButton: true,
+      confirmButtonText: 'View Cart',
+      customClass: {
+        confirmButton: 'my-confirm-btn'
+      },
+      buttonsStyling: false
+    }).then(() => this.router.navigate(['/cart', targetUserId]));
+    },
+  error: () => {
+    Swal.fire('Error', 'Failed to add meal to cart. Please try again.', 'error');
+  }
+});
+
+  }
 
 }

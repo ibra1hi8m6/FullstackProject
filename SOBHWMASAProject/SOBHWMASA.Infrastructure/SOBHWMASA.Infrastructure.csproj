@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SOBHWMASA.Data\SOBHWMASA.Data.csproj" />
     <ProjectReference Include="..\SOBHWMASA.Domain\SOBHWMASA.Domain.csproj" />
   </ItemGroup>
 

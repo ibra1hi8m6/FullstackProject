@@ -1,0 +1,34 @@
+<p>order-history works!</p>
+<div class="order-history-container">
+  <h2>Your Orders</h2>
+
+  <div *ngIf="loading">Loading your orders...</div>
+
+  <div *ngIf="!loading && orders.length === 0">
+    <p>No orders found.</p>
+  </div>
+
+  <table *ngIf="!loading && orders.length > 0" class="order-table">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th>Payment</th>
+        
+        <th>Receive</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.orderNumber }}</td>
+        <td>{{ order.createdAt | date: 'short' }}</td>
+        <td>{{ statusMap[order.status] }}</td>
+        <td>{{ order.totalPrice | currency }}</td>
+        <td>{{ paymentMap[order.paymentMethod] }}</td>
+<td>{{ receiveMap[order.receiveType] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

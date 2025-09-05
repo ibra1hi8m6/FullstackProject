@@ -18,5 +18,8 @@ namespace SOBHWMASA.Domain.Entities.Users
         public string? BuildingNumber { get; set; }    
         public string? FloorNumber { get; set; }       
         public string? FlatNumber { get; set; }
+
+        public string? ApplicationUserID { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
     }
 }

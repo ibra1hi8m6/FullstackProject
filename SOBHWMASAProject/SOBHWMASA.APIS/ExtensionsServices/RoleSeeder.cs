@@ -6,7 +6,7 @@ namespace SOBHWMASA.APIS.ExtensionsServices
     {
         public static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            string[] roleNames = { "Admin", "User", "Manager", "Cashier" };
+            string[] roleNames = {  "User", "Cashier", "Manager", "Admin" };
 
             foreach (var roleName in roleNames)
             {

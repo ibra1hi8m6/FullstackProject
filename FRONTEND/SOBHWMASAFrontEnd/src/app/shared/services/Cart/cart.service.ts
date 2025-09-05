@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
-import { AuthService } from '../Auths/auth.service';
+
 import { HttpHeaders } from '@angular/common/http';
 export interface CartItem {
   cartItemId?: number; // Add this since the backend now returns it
@@ -23,29 +23,23 @@ export interface Cart {
 export class CartService {
   private baseUrl = `${environment.apiurl}/Cart`;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
-createCart(cartDto: Cart): Observable<any> {
-  const token = this.authService.getToken();
-
-  let headers = new HttpHeaders();
-  if (token) {
-    headers = headers.set('Authorization', `Bearer ${token}`);
+  constructor(private http: HttpClient) {}
+  createCart(cartDto: Cart, userId?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/create/${userId}`, cartDto);
   }
 
-  return this.http.post(`${this.baseUrl}`, cartDto, { headers });
-}
-
-
-  getCartsByUser(userId: string): Observable<Cart[]> {
-    return this.http.get<Cart[]>(`${this.baseUrl}/user/${userId}`);
+  getActiveCartByUser(userId: string): Observable<Cart> {
+    return this.http.get<Cart>(`${this.baseUrl}/active/${userId}`);
   }
 
+ 
   getCartById(cartId: number): Observable<Cart> {
     return this.http.get<Cart>(`${this.baseUrl}/${cartId}`);
   }
   deleteItemFromCart(cartId: number, cartItemId: number): Observable<any> {
-    return this.http.delete(
-      `${this.baseUrl}/cart/${cartId}/item/${cartItemId}`
-    );
+    return this.http.delete(`${this.baseUrl}/${cartId}/item/${cartItemId}`);
+  }
+  clearCart(cartId: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${cartId}/clear`);
   }
 }

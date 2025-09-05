@@ -1,0 +1,31 @@
+<div class="container mt-5 pt-5">
+  <div class="d-flex justify-content-center align-items-center"
+       style="min-height: calc(100vh - 120px); margin-top: 60px;">
+
+    <div class="row rounded-4 border-0 shadow-lg bg-white overflow-hidden w-100"
+         style="max-width: 900px; min-height: 500px;">
+
+      <!-- Left side -->
+      <div class="col-md-5 d-none d-md-flex align-items-center justify-content-center"
+     style="background-color: rgb(214, 81, 6);">
+  <div class="text-center text-white p-4">
+    <img src="assets/images/authec-logo.png" class="w-50 mb-3" alt="Auth EC Logo">
+    <h2 class="fw-bolder">Auth EC</h2>
+  </div>
+</div>
+<!-- <h2>User Dashboard</h2>
+
+<nav class="tabs">
+  <a routerLink="address" routerLinkActive="active">Addresses</a>
+  <a routerLink="profile" routerLinkActive="active">Profile</a>
+</nav> -->
+      <!-- Right side -->
+      <div class="col-md-7 col-12 d-flex align-items-center">
+        <div class="p-5 w-100" [@routerFadeIn]="getRouteUrl()">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

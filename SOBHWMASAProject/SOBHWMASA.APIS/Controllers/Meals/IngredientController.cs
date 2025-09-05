@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SOBHWMASA.Infrastructure.ViewModel.Products.Ingredient;
-using SOBHWMASA.Service.Implementation.IService;
+using SOBHWMASA.Service.Implementation.IService.IProduct;
 
 namespace SOBHWMASA.APIS.Controllers.Meals
 {

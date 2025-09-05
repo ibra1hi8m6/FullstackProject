@@ -211,6 +211,134 @@ namespace SOBHWMASA.Data.Migrations
                     b.ToTable("CartItems");
                 });
 
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Orders.Coupon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal?>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UsageLimit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsedCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Coupons");
+                });
+
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Orders.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CouponId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReceiveType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("CouponId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Orders.OrderCounter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Counter")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderCounters");
+                });
+
             modelBuilder.Entity("SOBHWMASA.Domain.Entities.Products.CategoryIngredient", b =>
                 {
                     b.Property<int>("CategoryIngredientId")
@@ -437,6 +565,9 @@ namespace SOBHWMASA.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("AreaName")
                         .HasColumnType("nvarchar(max)");
 
@@ -458,6 +589,8 @@ namespace SOBHWMASA.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserID");
+
                     b.ToTable("Addresses");
                 });
 
@@ -467,9 +600,6 @@ namespace SOBHWMASA.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -525,8 +655,6 @@ namespace SOBHWMASA.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -628,6 +756,29 @@ namespace SOBHWMASA.Data.Migrations
                     b.Navigation("Size");
                 });
 
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Orders.Order", b =>
+                {
+                    b.HasOne("SOBHWMASA.Domain.Entities.Users.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("SOBHWMASA.Domain.Entities.Orders.Coupon", "Coupon")
+                        .WithMany("Orders")
+                        .HasForeignKey("CouponId");
+
+                    b.HasOne("SOBHWMASA.Domain.Entities.Users.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Coupon");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SOBHWMASA.Domain.Entities.Products.Ingredient", b =>
                 {
                     b.HasOne("SOBHWMASA.Domain.Entities.Products.CategoryIngredient", "CategoryIngredient")
@@ -699,18 +850,28 @@ namespace SOBHWMASA.Data.Migrations
                     b.Navigation("CategorySize");
                 });
 
-            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Users.ApplicationUser", b =>
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Users.Address", b =>
                 {
-                    b.HasOne("SOBHWMASA.Domain.Entities.Users.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
+                    b.HasOne("SOBHWMASA.Domain.Entities.Users.ApplicationUser", "ApplicationUser")
+                        .WithMany("Addresses")
+                        .HasForeignKey("ApplicationUserID");
 
-                    b.Navigation("Address");
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("SOBHWMASA.Domain.Entities.Orders.Cart", b =>
                 {
                     b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Orders.Coupon", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("SOBHWMASA.Domain.Entities.Users.ApplicationUser", b =>
+                {
+                    b.Navigation("Addresses");
                 });
 #pragma warning restore 612, 618
         }

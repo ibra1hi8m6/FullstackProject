@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: 'Inter', sans-serif;
+
+
+}/* You can add global styles to this file, and also import other style files */
+/* form
+validation
+*/
+.error-feedback {
+font-size: 0.9rem;
+color:crimson;
+margin: 0.3rem important;
+margin-top: 0.1rem important;
+}
+.my-confirm-btn {
+  background-color: rgb(214, 81, 6) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+}
+
+.my-cancel-btn {
+  background-color: #ccc !important;
+  color: #000 !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  cursor: pointer !important;
+}

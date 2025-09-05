@@ -1,0 +1,11 @@
+<p>user-lookup works!</p>
+<div class="user-lookup">
+      <h3>Lookup User by Phone</h3>
+      <input type="text" [(ngModel)]="phoneNumber" placeholder="Enter phone number" class="form-control"/>
+      <button class="btn btn-primary mt-2" (click)="lookupUser()">Lookup</button>
+
+      <div *ngIf="user">
+        <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+        <p><strong>User ID:</strong> {{ user.userId }}</p>
+      </div>
+    </div>

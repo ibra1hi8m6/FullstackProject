@@ -1,0 +1,12 @@
+<p>add-address works!</p>
+<p>add-address works!</p>
+<h2>Add New Address</h2>
+<form (ngSubmit)="saveAddress()">
+  <input [(ngModel)]="description" name="description" placeholder="Description" required />
+  <input [(ngModel)]="areaName" name="areaName" placeholder="Area" />
+  <input [(ngModel)]="streetName" name="streetName" placeholder="Street" />
+  <input [(ngModel)]="buildingNumber" name="buildingNumber" placeholder="Building Number" />
+  <input [(ngModel)]="floorNumber" name="floorNumber" placeholder="Floor Number" />
+  <input [(ngModel)]="flatNumber" name="flatNumber" placeholder="Flat Number" />
+  <button type="submit">Save Address</button>
+</form>

@@ -1,0 +1,29 @@
+<div class="mb-4">
+<h2 class="fw-bold" style="color: rgb(214, 81, 6);">
+    Sign in
+  </h2>
+  <div>Don't have an account?
+    <a routerLink="/user/signup" class="text-decoration-none fw-medium  d-inlin-block"style="color: rgb(214, 81, 6);">Sign up</a>
+  </div>
+</div>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
+    <div class="error-feedback" *ngIf="hasDisplayableError('email') && form.get('email')?.hasError('required')">
+      Please enter your email address.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <input class="form-control bg-body-secondary" placeholder="Password" formControlName="password" type="password">
+    <div class="error-feedback" *ngIf="hasDisplayableError('password') && form.get('password')?.hasError('required')">
+      Please enter your password.
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <button type="submit" class="btn btn-success w-100 rounded-3" style="background-color: rgb(214, 81, 6); color: white;">
+      Sign in
+    </button>
+  </div>
+</form>

@@ -38,40 +38,30 @@
               <li><a class="dropdown-item" routerLink="/sizes/category">Category Sizes</a></li>
             </ul>
           </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="dropdown-a"
-              data-toggle="dropdown"
-              >Blog</a
-            >
-            <div class="dropdown-menu" aria-labelledby="dropdown-a">
-              <a class="dropdown-item" routerLink="/blog">blog</a>
-              <a class="dropdown-item" routerLink="/blog-details"
-                >blog Single</a
-              >
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/contact">Contact</a>
-          </li>
-           <li class="nav-item" *ngIf="!authService.isAuthenticated()">
-    <a class="nav-link" routerLink="/login"><i class="fa fa-sign-in"></i> Sign In</a>
+
+          <li class="nav-item" [appHideIfClaimsNotMet]="claimReq.cashierOrManager">
+  <a class="nav-link" routerLink="/userlookup">User Lookup</a>
+</li>
+           <li class="nav-item" *ngIf="!authService.isLoggedIn()">
+    <a class="nav-link" routerLink="/user/signin"><i class="fa fa-sign-in"></i> Sign In</a>
   </li>
-  <li class="nav-item" *ngIf="!authService.isAuthenticated()">
-    <a class="nav-link" routerLink="/register"><i class="fa fa-user-plus"></i> Sign Up</a>
+  <li class="nav-item" *ngIf="!authService.isLoggedIn()">
+    <a class="nav-link" routerLink="/user/signup"><i class="fa fa-user-plus"></i> Sign Up</a>
   </li>
 
   <!-- Logged in -->
-  <li class="nav-item dropdown" *ngIf="authService.isAuthenticated()">
+  <li class="nav-item dropdown" *ngIf="authService.isLoggedIn()">
     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
       <i class="fa fa-user"></i> {{ firstName }}
     </a>
     <ul class="dropdown-menu">
-      <li *ngIf="isAdmin()">
-        <a class="dropdown-item" routerLink="/user-register">Register Special User</a>
+      <li [appHideIfClaimsNotMet]="claimReq.adminOnly">
+        <a class="dropdown-item" routerLink="/user/adminSignup">Register Special User</a>
       </li>
+      <li><a class="dropdown-item" routerLink="profile" >Profile</a></li>
+      <li><a class="dropdown-item" routerLink="address/manage" >My Addresses</a></li>
+      <li><a class="dropdown-item" routerLink="/user-order/order-history">My Orders</a></li>
+      <li><a class="dropdown-item" [routerLink]="['/cart', userId]">My Cart</a></li>
       <li>
         <a class="dropdown-item" (click)="logout()">Logout</a>
       </li>

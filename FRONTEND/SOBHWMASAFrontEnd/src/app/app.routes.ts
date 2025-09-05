@@ -30,23 +30,59 @@ import { AddMealComponent } from './features/add/Meal/meal/add-meal/add-meal.com
 import { UpdateMealComponent } from './features/add/Meal/meal/update-meal/update-meal.component';
 import { DeleteMealComponent } from './features/add/Meal/meal/delete-meal/delete-meal.component';
 import { GetMealComponent } from './features/add/Meal/meal/get-meal/get-meal.component';
-import { LoginComponent } from './features/auth/login/login.component';
-import { RegisterComponent } from './features/auth/register/register.component';
-import { UserRegisterComponent } from './features/auth/user-register/user-register.component';
-import { adminGuard } from './features/auth/guards/admin.guard';
 import { MenuComponent } from './features/menu/menu/menu.component';
 import { SingleMealComponent } from './features/menu/single-meal/single-meal.component';
 import { CartComponent } from './features/order/cart/cart.component';
+import { UserComponent } from './user/user.component';
+import { RegistrationComponent } from './user/registration/registration.component';
+import { LoginComponent } from './user/login/login.component';
+import { ForbiddenComponent } from './shared/forbidden/forbidden.component';
+import { AdminUserManagementComponent } from './user/admin-user-management/admin-user-management.component';
+import { authGuard } from './shared/Guard/auth.guard';
+import { claimReq } from './shared/utils/claimReq-utils';
+import { AddressComponent } from './user/addresses/address.component';
+import { ManageAddressesComponent } from './user/addresses/manage-addresses/manage-addresses.component';
+import { AddAddressComponent } from './user/addresses/add-address/add-address.component';
+import { ProfileComponent } from './user/profile/profile.component';
+import { UserOrderComponent } from './features/order/user-order/user-order.component';
+import { ManagerOrderComponent } from './features/order/user-order/manager-order/manager-order.component';
+import { OrderCheckoutComponent } from './features/order/user-order/order-checkout/order-checkout.component';
+import { OrderHistoryComponent } from './features/order/user-order/order-history/order-history.component';
+import { UserLookupComponent } from './user/user-lookup/user-lookup.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: '', component: HomeComponent },
   {
-    path: 'user-register',
-    component: UserRegisterComponent,
-    canActivate: [adminGuard],
+    path: 'user',
+    component: UserComponent,
+    children: [
+      { path: 'signup', component: RegistrationComponent },
+      { path: 'signin', component: LoginComponent },
+      {
+        path: 'adminSignup',
+        component: AdminUserManagementComponent,
+        canActivate: [authGuard],
+        data: { claimReq: claimReq.adminOnly },
+      },
+
+    ],
   },
-  { path: '', component: HomeComponent }, // Default route
+  {
+        path: 'address',
+        component: AddressComponent,
+        children: [
+          { path: 'manage', component: ManageAddressesComponent },
+          { path: 'add', component: AddAddressComponent },
+           // default
+        ]
+  },
+  {
+        path: 'profile',
+        component: ProfileComponent // you can edit later
+  }, {
+        path: 'userlookup',
+        component: UserLookupComponent // you can edit later
+  },
   {
     path: 'ingredients',
     component: IngredientComponent,
@@ -113,4 +149,19 @@ export const routes: Routes = [
   { path: 'meal/:id', component: SingleMealComponent },
   { path: 'menu', component: MenuComponent },
   { path: 'cart/:id', component: CartComponent },
+  {
+    path: 'forbidden',
+    component: ForbiddenComponent,
+  },
+   {
+    path: 'user-order',
+    component: UserOrderComponent,
+    children: [
+      { path: 'manager-order', component: ManagerOrderComponent },
+      { path: 'order-checkout', component: OrderCheckoutComponent },
+      { path: 'order-history', component: OrderHistoryComponent },
+
+    ],
+  },
 ];
+

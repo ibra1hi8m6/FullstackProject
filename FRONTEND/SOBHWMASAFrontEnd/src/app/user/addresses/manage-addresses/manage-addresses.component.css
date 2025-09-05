@@ -1,0 +1,84 @@
+.address-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.address-item {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.address-line {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title { font-weight: 600; }
+.muted { color: #666; font-size: 0.9rem; }
+
+.actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  border: 1px solid #ddd;
+  background: #f8f8f8;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover { background: #f1f1f1; }
+.btn.primary { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+.btn.primary:hover { opacity: 0.95; }
+.btn.danger { background: #dc3545; color: #fff; border-color: #dc3545; }
+
+.address-edit .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.address-edit label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 6px;
+}
+
+.address-edit input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.add-link {
+  display: inline-block;
+  margin-top: 12px;
+  text-decoration: none;
+}
+.tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.tabs a {
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.tabs a.active {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}

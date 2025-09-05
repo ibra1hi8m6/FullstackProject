@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOBHWMASA.APIS", "SOBHWMASA.APIS\SOBHWMASA.APIS.csproj", "{6C975F7F-A2B3-4CDB-B6EA-303899F8BD85}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOBHWMASA.Service", "SOBHWMASA.Service\SOBHWMASA.Service.csproj", "{44C65921-470C-4157-8D0A-01A938527D8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOBHWMASA.Data", "SOBHWMASA.Data\SOBHWMASA.Data.csproj", "{8B1A1FD2-3F11-4EDD-9CF4-B33A3A114533}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,60 @@
+<p>manage-addresses works!</p>
+<h2>My Addresses</h2>
+
+<ul class="address-list">
+  <li *ngFor="let address of addresses; trackBy: trackById" class="address-item">
+    <!-- VIEW MODE -->
+    <div *ngIf="editingId !== address.id" class="address-view">
+      <div class="address-line">
+        <span class="title">{{ address.description }}</span>
+        <span class="muted">
+          {{ address.areaName || '-' }} • {{ address.streetName || '-' }}
+          • Bldg {{ address.buildingNumber || '-' }}
+          • Floor {{ address.floorNumber || '-' }}
+          • Flat {{ address.flatNumber || '-' }}
+        </span>
+      </div>
+      <div class="actions">
+        <button class="btn btn-sm" (click)="startEdit(address)">Edit</button>
+        <button class="btn btn-sm danger" (click)="deleteAddress(address.id)">Delete</button>
+      </div>
+    </div>
+
+    <!-- EDIT MODE -->
+    <form *ngIf="editingId === address.id" (ngSubmit)="saveEdit()" class="address-edit">
+      <div class="grid">
+        <label>
+          Description
+          <input [(ngModel)]="editModel.description" name="description" required />
+        </label>
+        <label>
+          Area
+          <input [(ngModel)]="editModel.areaName" name="areaName" />
+        </label>
+        <label>
+          Street
+          <input [(ngModel)]="editModel.streetName" name="streetName" />
+        </label>
+        <label>
+          Building #
+          <input [(ngModel)]="editModel.buildingNumber" name="buildingNumber" />
+        </label>
+        <label>
+          Floor #
+          <input [(ngModel)]="editModel.floorNumber" name="floorNumber" />
+        </label>
+        <label>
+          Flat #
+          <input [(ngModel)]="editModel.flatNumber" name="flatNumber" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-sm primary">Save</button>
+        <button type="button" class="btn btn-sm" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </li>
+</ul>
+<nav class="tabs"><a routerLink="address/add" >+ Add New Address</a></nav>
+

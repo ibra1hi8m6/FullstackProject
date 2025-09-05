@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SOBHWMASA.Service.Implementation.IService;
 using SOBHWMASA.Infrastructure.ViewModel.Products.Size;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SOBHWMASA.Infrastructure.ViewModel.Products.Meal;
+using SOBHWMASA.Service.Implementation.IService.IProduct;
 
 namespace SOBHWMASA.APIS.Controllers.Meals
 {

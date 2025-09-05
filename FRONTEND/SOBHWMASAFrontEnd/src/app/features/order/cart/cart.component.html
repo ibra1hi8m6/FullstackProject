@@ -1,19 +1,50 @@
 <div class="cart-container">
-    <h2>Your Cart</h2>
+  <h2 class="text-center mb-4">Your Cart</h2>
 
-    <div *ngIf="!cart || cart.cartItems.length === 0">
-        <p>Your cart is empty. Start shopping!</p>
+  <div *ngIf="!cart || cart.cartItems.length === 0" class="empty-cart-message text-center p-4">
+    <p class="text-muted">Your cart is empty. Start shopping!</p>
+  </div>
+
+  <div *ngIf="detailedCartItems.length > 0">
+    <!-- Cart items in a row layout -->
+    <div class="cart-items-container">
+      <div *ngFor="let item of detailedCartItems; trackBy: trackByCartItemId" class="cart-item-row">
+        <div class="item-image-container">
+          <img [src]="'data:image/jpeg;base64,' + item.mealDetails.imageFileBase64"
+               alt="{{ item.mealDetails.nameEnglish }}"
+               class="item-image">
+        </div>
+
+        <div class="item-details">
+          <h5 class="item-name">{{ item.mealDetails.nameEnglish }}</h5>
+          <p class="item-size">Size: {{ item.sizeDetails.nameEnglish }}</p>
+          <p class="item-price">Price: ${{ (item.subtotal / item.quantity).toFixed(2) }}</p>
+        </div>
+
+        <div class="quantity-controls">
+          <p class="quantity-label">Quantity:</p>
+          <div class="quantity-buttons">
+            <button (click)="updateQuantity(item, -1)" class="btn btn-outline-secondary btn-sm">-</button>
+            <span class="quantity-display">{{ item.quantity }}</span>
+            <button (click)="updateQuantity(item, 1)" class="btn btn-outline-secondary btn-sm">+</button>
+          </div>
+        </div>
+
+        <div class="subtotal-container">
+          <p class="subtotal">Subtotal: ${{ item.subtotal.toFixed(2) }}</p>
+        </div>
+
+        <div class="remove-btn-container">
+          <button (click)="removeItem(item.cartItemId!)" class="btn btn-danger btn-sm">Remove</button>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="cart && cart.cartItems.length > 0">
-        <ul>
-            <li *ngFor="let item of cart.cartItems; let i = index">
-                <span>Meal ID: {{ item.mealId }}</span>
-                <span>Quantity: {{ item.quantity }}</span>
-                <button (click)="removeItem(item.cartItemId!)">Remove</button>
-            </li>
-        </ul>
-
-        <button (click)="clearCart()">Clear Cart</button>
+    <!-- Cart footer with orange background -->
+    <div class="cart-footer">
+      <div class="total-price">Total: ${{ totalPrice.toFixed(2) }}</div>
+      <button class="btn btn-success" (click)="goToCheckout()">Proceed to Checkout</button>
+      <button (click)="clearCart()" class="clear-cart-btn">Clear Cart</button>
     </div>
+  </div>
 </div>

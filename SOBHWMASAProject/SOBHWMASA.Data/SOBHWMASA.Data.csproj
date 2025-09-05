@@ -22,8 +22,4 @@
     <ProjectReference Include="..\SOBHWMASA.Domain\SOBHWMASA.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

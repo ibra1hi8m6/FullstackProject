@@ -1,0 +1,157 @@
+.cart-container {
+  max-width: 1200px;
+  margin: 6rem auto 2rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.empty-cart-message {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px dashed #dee2e6;
+}
+
+.cart-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cart-item-row {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  gap: 1.5rem;
+}
+
+.item-image-container {
+  flex: 0 0 100px;
+}
+
+.item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.item-size, .item-price {
+  margin-bottom: 0.25rem;
+  color: #6c757d;
+}
+
+.quantity-controls {
+  flex: 0 0 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quantity-label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.quantity-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-display {
+  font-weight: bold;
+  min-width: 2rem;
+  text-align: center;
+}
+
+.subtotal-container {
+  flex: 0 0 150px;
+  text-align: center;
+}
+
+.subtotal {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.remove-btn-container {
+  flex: 0 0 100px;
+}
+
+.cart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgb(214, 81, 6);
+  border-radius: 8px;
+  color: white;
+}
+
+.total-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.clear-cart-btn {
+  background-color: white;
+  color: rgb(214, 81, 6);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.clear-cart-btn:hover {
+  background-color: #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .cart-item-row {
+    flex-wrap: wrap;
+  }
+
+  .item-details {
+    flex: 1 0 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .cart-item-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .quantity-controls, .subtotal-container, .remove-btn-container {
+    flex: 1 0 100%;
+  }
+
+  .cart-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

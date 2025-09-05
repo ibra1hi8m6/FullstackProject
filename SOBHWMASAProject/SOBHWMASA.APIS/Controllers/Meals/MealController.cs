@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SOBHWMASA.Infrastructure.ViewModel.Products.Meal;
 using SOBHWMASA.Service.Implementation.Service;
-using SOBHWMASA.Service.Implementation.IService;
 using System.Text.Json;
+using SOBHWMASA.Service.Implementation.IService.IProduct;
 namespace SOBHWMASA.APIS.Controllers.Meals
 {
     [Route("api/[controller]")]
