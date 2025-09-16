@@ -11,8 +11,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using SOBHWMASA.APIs.ExtensionsServices;
 using SOBHWMASA.APIS.ExtensionsServices;
-using SOBHWMASA.APIS.WebApp;
+
 using SOBHWMASA.Data;
+using SOBHWMASA.Data.seed;
 using SOBHWMASA.Domain.Entities.Products;
 using SOBHWMASA.Domain.Entities.Users;
 using SOBHWMASA.Infrastructure.Mapping;
@@ -78,18 +79,45 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.ConfigureWebAppAsync().GetAwaiter().GetResult();
 
-// Middleware order
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await RoleSeeder.SeedRoles(roleManager);
+}
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await ApplicationDbInitializer.SeedAdminAsync(services);
+}
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+    app.UseSwaggerUI();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SOBHWMASA API v1"));
 }
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
 app.UseAuthentication();
 app.UseAuthorization();
+
+var webRootPath = app.Environment.WebRootPath
+                    ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+var uploadsPath = Path.Combine(webRootPath, "uploads");
+Directory.CreateDirectory(uploadsPath);
+app.UseStaticFiles(); // Enable serving static files
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 app.Run();

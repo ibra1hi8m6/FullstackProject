@@ -18,7 +18,7 @@ export class HeaderComponent implements AfterViewInit {
   role: string = '';
   userId: string | null = null;
 claimReq = claimReq
-
+isNavbarOpen = false;
   constructor(private elRef: ElementRef, private router: Router,public authService: AuthService)
   {}
   ngAfterViewInit() {
@@ -26,6 +26,10 @@ claimReq = claimReq
     dropdowns.forEach((dropdown: any) => new bootstrap.Dropdown(dropdown));
 
     this.updateUserInfo();
+  }
+
+    toggleNavbar() {
+    this.isNavbarOpen = !this.isNavbarOpen;
   }
 updateUserInfo() {
     const token = this.authService.getToken();
@@ -51,6 +55,10 @@ isUserLoggedIn(): boolean {
   }
   navigate(route: string) {
     this.router.navigateByUrl(route);
+     this.isNavbarOpen = false;
     document.querySelector('.navbar-collapse')?.classList.remove('show'); // Close menu
   }
+
+
+
 }

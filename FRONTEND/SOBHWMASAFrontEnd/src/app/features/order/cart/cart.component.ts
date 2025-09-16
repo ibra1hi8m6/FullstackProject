@@ -152,35 +152,50 @@ export class CartComponent implements OnInit {
   }
 
   updateQuantity(item: DetailedCartItem, change: number) {
-    const newQuantity = item.quantity + change;
-    if (newQuantity <= 0) {
-      this.removeItem(item.cartItemId!);
-      return;
-    }
-
-    const updatedCartDto: Cart = {
-      cartId: this.cart?.cartId,
-      status: true,
-      cartItems: [{
-        cartItemId: item.cartItemId,
-        mealId: item.mealId,
-        sizeId: item.sizeDetails.sizeId,
-        quantity: change,
-        status: true
-      }]
-    };
-
-    this.cartService.createCart(updatedCartDto).subscribe({
-      next: () => {
-        this.loadCart();
-      },
-      error: (err) => {
-        console.error('Failed to update item quantity', err);
-        alert('Failed to update quantity. Please try again.');
-      }
-    });
+  const newQuantity = item.quantity + change;
+  if (newQuantity <= 0) {
+    this.removeItem(item.cartItemId!);
+    return;
   }
 
+  const updatedCartDto: Cart = {
+    cartId: this.cart?.cartId,
+    status: true,
+    cartItems: [{
+      cartItemId: item.cartItemId,
+      mealId: item.mealId,
+      sizeId: item.sizeDetails.sizeId,
+      quantity: change,
+      status: true
+    }]
+  };
+
+  const claims = this.authService.getClaims();
+  const role = claims ? claims['role'] : null;
+
+  const targetUserId = role === 'Cashier'
+    ? localStorage.getItem('selectedUserId') || ''
+    : claims?.['UserID'] || '';
+
+  if (!targetUserId) {
+    console.error("No userId found for updateQuantity");
+    return;
+  }
+
+  this.cartService.createCart(updatedCartDto, targetUserId).subscribe({
+    next: () => {
+      this.loadCart();
+    },
+    error: (err) => {
+      console.error('Failed to update item quantity', err);
+      this.toastr.error('Failed to update quantity. Please try again.', 'Error', {
+        positionClass: 'toast-top-center',
+        timeOut: 3000,
+        progressBar: true,
+      });
+    }
+  });
+}
  removeItem(cartItemId: number) {
   if (this.cart && this.cart.cartId !== undefined) {
     this.cartService.deleteItemFromCart(this.cart.cartId, cartItemId).subscribe({

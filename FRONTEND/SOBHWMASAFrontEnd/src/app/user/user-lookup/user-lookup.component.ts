@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../shared/services/Authentication/Auth/auth.service';
 import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-user-lookup',
   standalone: true, // make sure this is standalone
-  imports: [FormsModule], // <-- add FormsModule here
+  imports: [FormsModule,NgIf], // <-- add FormsModule here
   templateUrl: './user-lookup.component.html',
   styleUrl: './user-lookup.component.css'
 })

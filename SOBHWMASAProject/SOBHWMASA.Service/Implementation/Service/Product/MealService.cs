@@ -1,20 +1,21 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using SOBHWMASA.Data;
+using SOBHWMASA.Domain.Entities.Products;
+using SOBHWMASA.Infrastructure.ViewModel.Products.Ingredient;
+using SOBHWMASA.Infrastructure.ViewModel.Products.Meal;
+using SOBHWMASA.Infrastructure.ViewModel.ProductsDTOS.MealDTOS;
+using SOBHWMASA.Service.Implementation.IService.IProduct;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SOBHWMASA.Infrastructure.ViewModel.Products.Meal;
-using SOBHWMASA.Domain.Entities.Products;
-using AutoMapper;
-using SOBHWMASA.Data;
-using SOBHWMASA.Infrastructure.ViewModel.Products.Ingredient;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using SOBHWMASA.Service.Implementation.IService.IProduct;
 namespace SOBHWMASA.Service.Implementation.Service.Product
 {
     public class MealService : IMealService
@@ -54,41 +55,54 @@ namespace SOBHWMASA.Service.Implementation.Service.Product
             await _categoryMealRepository.SaveAsync();
         }
 
-        public async Task AddMealAsync(MealDTO mealDTO)
+        public async Task AddMealAsync(CreateMealRequest request)
         {
-            if (mealDTO.MealIngredients == null || mealDTO.MealIngredients.Count == 0)
+            if (request.MealIngredients == null || request.MealIngredients.Count == 0)
             {
                 throw new InvalidOperationException("At least one ingredient is required");
             }
-            if (string.IsNullOrEmpty(mealDTO.ImageFileBase64))
+
+            if (string.IsNullOrEmpty(request.ImageFileBase64))
             {
                 throw new ArgumentException("No image file provided");
             }
-            var imageUrl = await SaveMealImageFromBase64(mealDTO.ImageFileBase64);
 
-            var meal = _mapper.Map<Meal>(mealDTO);
-            meal.ImageUrl = imageUrl;
+            // Save image and get URL
+            var imageUrl = await SaveMealImageFromBase64(request.ImageFileBase64);
+
+            // Create Meal entity (no AutoMapper needed here, but you can use it if you prefer)
+            var meal = new Meal
+            {
+                NameEnglish = request.NameEnglish,
+                NameArabic = request.NameArabic,
+                Status = request.Status,
+                CategoryMealId = request.CategoryMealId,
+                ImageUrl = imageUrl
+            };
+
             await _mealRepository.AddAsync(meal);
             await _mealRepository.SaveAsync();
 
-            foreach (var sizeDTO in mealDTO.MealSizes)
+            // Add sizes
+            foreach (var sizeReq in request.MealSizes)
             {
                 var mealSize = new MealSize
                 {
                     MealId = meal.MealId,
-                    SizeId = sizeDTO.SizeId,
-                    Price = sizeDTO.Price,
+                    SizeId = sizeReq.SizeId,
+                    Price = sizeReq.Price,
                     Status = true
                 };
                 await _mealSizeRepository.AddAsync(mealSize);
             }
 
-            foreach (var ingredientDTO in mealDTO.MealIngredients)
+            // Add ingredients
+            foreach (var ingredientReq in request.MealIngredients)
             {
                 var mealIngredient = new MealIngredient
                 {
                     MealId = meal.MealId,
-                    IngredientId = ingredientDTO.IngredientId,
+                    IngredientId = ingredientReq.IngredientId,
                     Status = true
                 };
                 await _mealIngredientRepository.AddAsync(mealIngredient);

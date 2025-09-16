@@ -83,6 +83,7 @@ namespace SOBHWMASA.APIs.ExtensionsServices
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
+                          
                 });
             });
 

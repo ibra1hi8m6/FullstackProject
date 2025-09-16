@@ -1,4 +1,5 @@
 ﻿using SOBHWMASA.Infrastructure.ViewModel.Products.Meal;
+using SOBHWMASA.Infrastructure.ViewModel.ProductsDTOS.MealDTOS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace SOBHWMASA.Service.Implementation.IService.IProduct
         Task<CategoryMealDTO> UpdateAndCopyCategoryMealAsync(int id, CategoryMealDTO NewCategoryMealData);
 
         // Meal Methods
-        Task AddMealAsync(MealDTO mealDTO);
+        Task AddMealAsync(CreateMealRequest request);
         Task<IEnumerable<MealDTO>> GetAllMealsAsync();
         Task<IEnumerable<MealDTO>> GetMealsByCategoryIdAsync(int categoryId);
         Task<MealDTO> GetMealByIdAsync(int id);

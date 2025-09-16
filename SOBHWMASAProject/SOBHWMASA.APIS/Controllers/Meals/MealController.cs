@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SOBHWMASA.Infrastructure.ViewModel.Products.Meal;
+using SOBHWMASA.Infrastructure.ViewModel.ProductsDTOS.MealDTOS;
+using SOBHWMASA.Service.Implementation.IService.IProduct;
 using SOBHWMASA.Service.Implementation.Service;
 using System.Text.Json;
-using SOBHWMASA.Service.Implementation.IService.IProduct;
 namespace SOBHWMASA.APIS.Controllers.Meals
 {
     [Route("api/[controller]")]
@@ -28,7 +29,7 @@ namespace SOBHWMASA.APIS.Controllers.Meals
 
         // 2. Add Meal
         [HttpPost("AddMeal")]
-        public async Task<IActionResult> AddMeal([FromBody] MealDTO mealDto)
+        public async Task<IActionResult> AddMeal([FromBody] CreateMealRequest request)
         {
             if (!ModelState.IsValid) // <--- Inspect ModelState here if you hit this
             {
@@ -37,7 +38,7 @@ namespace SOBHWMASA.APIS.Controllers.Meals
             try
             {
                
-                await _mealService.AddMealAsync(mealDto);
+                await _mealService.AddMealAsync(request);
                 return Ok("Meal created successfully");
             }
             catch (Exception ex)
